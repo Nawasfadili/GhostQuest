@@ -667,6 +667,25 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         break;
       }
 
+      case 'discordTabReady': {
+        const data = await chrome.storage.local.get(['autoStart', 'token', 'interval', 'jitter', 'notifications', 'respectSchedule', 'activeStart', 'activeEnd']);
+        const shouldAuto = data.autoStart !== false; // default true
+        if (shouldAuto && !state.isRunning) {
+          log('🟢 Discord tab detected — auto-starting quest completer…', 'info');
+          await startCompleter({
+            token: data.token || state.token,
+            interval: data.interval || 25,
+            jitter: data.jitter !== false,
+            notifications: data.notifications !== false,
+            respectSchedule: data.respectSchedule || false,
+            activeStart: data.activeStart ?? 8,
+            activeEnd: data.activeEnd ?? 23,
+          });
+        }
+        sendResponse({ success: true });
+        break;
+      }
+
       default:
         sendResponse({ error: 'Unknown action' });
     }
@@ -689,7 +708,7 @@ async function restoreState() {
   if (data.logs) state.logs = data.logs;
   if (data.quests) state.quests = data.quests;
 
-  const shouldStart = data.isRunning || data.autoStart;
+  const shouldStart = data.isRunning || data.autoStart !== false;
   if (shouldStart) {
     log('♻️ Resuming quest completer…', 'info');
     await startCompleter({

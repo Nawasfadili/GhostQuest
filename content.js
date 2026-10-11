@@ -61,4 +61,12 @@
     })();
     return true;
   });
+
+  // Automatically trigger background quest runner when Discord tab loads
+  setTimeout(() => {
+    chrome.runtime.sendMessage({
+      action: 'discordTabReady',
+      url: location.href,
+    }).catch(() => {});
+  }, 3000);
 })();
