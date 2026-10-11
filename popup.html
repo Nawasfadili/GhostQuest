@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GhostQuest — Discord Quest Completer</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <svg width="28" height="28" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.401329 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978Z" fill="#5865F2"/>
+        </svg>
+        <span class="logo-text">GhostQuest</span>
+      </div>
+      <div class="status-badge" id="statusBadge">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Idle</span>
+      </div>
+    </div>
+
+    <!-- Warning Banner -->
+    <div class="warning-banner">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.5L20.5 19h-17L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>
+      <span>For educational purposes only. Use at your own risk.</span>
+    </div>
+
+    <!-- Token Section -->
+    <div class="section">
+      <label class="label">Discord Token</label>
+      <div class="input-group">
+        <input type="password" id="tokenInput" class="input" placeholder="Auto-detected from Discord tab..." />
+        <button class="btn-icon" id="toggleToken" title="Show/Hide token">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" id="eyeIcon">
+            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+          </svg>
+        </button>
+        <button class="btn-secondary" id="autoDetectBtn">Auto-Detect</button>
+      </div>
+      <div class="hint">Open Discord in another tab first, then click Auto-Detect</div>
+    </div>
+
+    <!-- Quests Section -->
+    <div class="section">
+      <div class="section-header">
+        <label class="label">Active Quests</label>
+        <button class="btn-refresh" id="refreshBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+          </svg>
+          Refresh
+        </button>
+      </div>
+      <div id="questsList" class="quests-list">
+        <div class="empty-state">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" opacity="0.3">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+          </svg>
+          <p>No quests loaded yet.<br/>Enter your token and click Refresh.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div class="section">
+      <label class="label">Settings</label>
+      <div class="settings-grid">
+        <div class="setting-item">
+          <label class="setting-label">Heartbeat Interval</label>
+          <div class="slider-group">
+            <input type="range" id="intervalSlider" min="20" max="120" value="30" class="slider" />
+            <span id="intervalValue" class="slider-value">30s</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <label class="setting-label">Auto-start on load</label>
+          <label class="toggle">
+            <input type="checkbox" id="autoStartToggle" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label class="setting-label">Show notifications</label>
+          <label class="toggle">
+            <input type="checkbox" id="notifToggle" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label class="setting-label">Gaussian jitter timing</label>
+          <label class="toggle">
+            <input type="checkbox" id="jitterToggle" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label class="setting-label">Active hours only</label>
+          <label class="toggle">
+            <input type="checkbox" id="scheduleToggle" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item schedule-row" id="scheduleRow" style="display:none;">
+          <label class="setting-label">Hours (24h)</label>
+          <div class="hours-group">
+            <input type="number" id="activeStart" class="input hour-input" value="8" min="0" max="23" />
+            <span class="hours-sep">–</span>
+            <input type="number" id="activeEnd" class="input hour-input" value="23" min="0" max="23" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button class="btn-start" id="startBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Start Completing
+      </button>
+      <button class="btn-stop" id="stopBtn" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>
+        Stop
+      </button>
+    </div>
+
+    <!-- Log Section -->
+    <div class="section">
+      <div class="section-header">
+        <label class="label">Activity Log</label>
+        <button class="btn-clear" id="clearLogBtn">Clear</button>
+      </div>
+      <div id="logContainer" class="log-container">
+        <div class="log-entry log-info">Extension loaded. Ready to start.</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-label">Heartbeats</span>
+        <span class="stat-value" id="statHeartbeats">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Quests Done</span>
+        <span class="stat-value" id="statCompleted">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Orbs Earned</span>
+        <span class="stat-value orbs" id="statOrbs">0</span>
+      </div>
+    </div>
+
+    <div class="footer">v1.0.0 · Educational Use Only</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

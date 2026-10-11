@@ -1,0 +1,6 @@
+_metadata/
+.DS_Store
+Thumbs.db
+*.zip
+*.crx
+*.pem
